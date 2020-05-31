@@ -2,10 +2,12 @@ package Parser.Author;
 
 import com.gargoylesoftware.htmlunit.BrowserVersion;
 import com.gargoylesoftware.htmlunit.WebClient;
+import com.gargoylesoftware.htmlunit.html.DomNode;
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 
 public class AlphabetParser {
@@ -17,10 +19,15 @@ public class AlphabetParser {
     // handle two different xpath
     // one is for the first page of the author for each alphabet letter
     // another one is for rest of the pages
-    private static final String FIRST_PAGE_PATH = "/html/body/div[5]/div/div[1]/div[3]/table";
-    private static final String PAGE_PATH = "/html/body/div[5]/div/div[1]/div[2]/table";
+    private static final String PAGE_PATH = "//table[@class='table table-hover table-bordered']";
 
-    public static ArrayList<Author> parseAlphabet(String alphabetToParse) {
+
+//    /html/body/div[5]/div/div[1]/div[3]/table
+//    /html/body/div[5]/div/div[1]/div/table
+//    /html/body/div[5]/div/div[1]/div[2]/table
+
+    public static ArrayList<Author> parseAlphabet(Character alphabetToParse) {
+        System.out.println("\n\nStarting alphabet: " + alphabetToParse);
         prePageFetch();
         ArrayList<Author> authors = new ArrayList<>();
         String siteURL = COMMON_URL + "/" + alphabetToParse;
@@ -31,9 +38,9 @@ public class AlphabetParser {
             System.out.println("Page does not exists: " + siteURL);
             return authors;
         }
-        authors.addAll(AlphabetPageParser.parseAlphabetPage(htmlPage, FIRST_PAGE_PATH));
+        authors.addAll(AlphabetPageParser.parseAlphabetPage(htmlPage, PAGE_PATH));
 
-        Integer loopCount = 2;
+        int loopCount = 2;
         // loop through each number until urls don't match
         while (true) {
             String newURL = siteURL + loopCount;
@@ -49,6 +56,8 @@ public class AlphabetParser {
             authors.addAll(AlphabetPageParser.parseAlphabetPage(htmlPage, PAGE_PATH));
             loopCount++;
         }
+        System.out.println("\nDone with alphabet: " + alphabetToParse);
+        System.out.println("\nAuthors count: " + authors.size());
         return authors;
     }
 
@@ -66,11 +75,8 @@ public class AlphabetParser {
     }
 
     private static Boolean pageExists() {
-        Integer code = htmlPage.getWebResponse().getStatusCode();
-        if (code == 200) {
-            return true;
-        }
-        return false;
+        int code = htmlPage.getWebResponse().getStatusCode();
+        return code == 200;
     }
 
     private static void getPage(String siteURL) {

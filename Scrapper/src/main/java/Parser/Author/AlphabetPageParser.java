@@ -1,9 +1,6 @@
 package Parser.Author;
 
-import com.gargoylesoftware.htmlunit.html.HtmlAnchor;
-import com.gargoylesoftware.htmlunit.html.HtmlPage;
-import com.gargoylesoftware.htmlunit.html.HtmlTable;
-import com.gargoylesoftware.htmlunit.html.HtmlTableCell;
+import com.gargoylesoftware.htmlunit.html.*;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -14,9 +11,9 @@ public class AlphabetPageParser {
     public static ArrayList<Author> parseAlphabetPage(HtmlPage htmlPage, String xPath) {
         ArrayList<Author> authors = new ArrayList<>();
         try {
-            List<Object> nodes = (List<Object>) htmlPage.getByXPath(xPath);
+            List<Object> nodes = htmlPage.getByXPath(xPath);
             HtmlTable table = (HtmlTable) nodes.get(0);
-            Integer tableRowCount = table.getRowCount();
+            int tableRowCount = table.getRowCount();
             for (int row = 1; row < tableRowCount; row++ ) {
                 // new author
                 Author author = new Author();
