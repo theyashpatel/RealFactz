@@ -3,7 +3,7 @@ package Parser.Author;
 import java.util.ArrayList;
 
 public class AlphabetsParser {
-    public static ArrayList<Author> parseAlphabetsForAuthors() {
+    public static ArrayList<Author> parse() {
         ArrayList<Author> authors = new ArrayList<>();
         for(char alphabet = 'a'; alphabet <='z'; alphabet++ )
         {
