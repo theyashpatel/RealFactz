@@ -1,0 +1,1 @@
+--This file contains all queries for Authors table
